@@ -9,7 +9,7 @@
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#f4f2ee;min-height:100vh;color:#1a1a18;font-size:15px;line-height:1.6}
 .page{max-width:720px;margin:0 auto;padding:1.5rem 1rem}
 .screen{display:none}.screen.active{display:block}
-.site-header{background:#fff;border-bottom:1px solid #e0ddd6;padding:.75rem 1.25rem;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:10}
+.site-header{background:#fff;border-bottom:1px solid #e0ddd6;padding:.75rem 1.25rem;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:10;flex-wrap:wrap;gap:.5rem}
 .logo{font-size:14px;font-weight:600;color:#1a1a18;display:flex;align-items:center;gap:8px}
 .logo-dot{width:9px;height:9px;border-radius:50%;background:#534AB7}
 .nav-link{font-size:13px;color:#888780;cursor:pointer;padding:4px 10px;border-radius:6px;transition:background .15s;border:none;background:transparent;font-family:inherit}
@@ -54,6 +54,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 .empty{text-align:center;padding:2rem;color:#888780;font-size:13px}
 .name-input{padding:.65rem 1rem;border:1px solid #d3d1c7;border-radius:8px;font-size:14px;font-family:inherit;color:#1a1a18;background:#fff;outline:none;transition:border-color .15s;width:100%}
 .name-input:focus{border-color:#534AB7}
+textarea.name-input{resize:vertical;font-family:inherit}
 .shared-note{font-size:11px;color:#888780;text-align:center;margin-top:.75rem;padding:.5rem;background:#f4f2ee;border-radius:6px}
 .timer-wrap{display:flex;align-items:center;gap:5px;font-size:13px;color:#888780}
 .rank-title{font-size:17px;font-weight:600;color:#1a1a18;margin-bottom:.85rem;display:flex;align-items:center;gap:8px}
@@ -67,6 +68,12 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 .rank-right{display:flex;align-items:center;gap:10px;flex-shrink:0}
 .rank-score{font-weight:600;color:#3C3489;font-size:13px;white-space:nowrap}
 .rank-time{font-size:11px;color:#888780;white-space:nowrap}
+.admin-tabs{display:flex;gap:6px;margin-bottom:1rem;flex-wrap:wrap}
+.qcard-row{display:flex;justify-content:space-between;align-items:flex-start;gap:.5rem}
+.qcard-actions{display:flex;gap:.4rem;flex-shrink:0}
+.btn-xs{padding:.3rem .6rem;font-size:11px}
+.btn-danger{border-color:#A32D2D;color:#A32D2D}
+label.small{font-size:12px;color:#5f5e5a;display:block;margin-bottom:.25rem}
 </style>
 </head>
 <body>
@@ -76,6 +83,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
   <div style="display:flex;gap:4px">
     <button class="nav-link active" id="nav-home" onclick="goHome()">Início</button>
     <button class="nav-link" id="nav-rank" onclick="goRanking()">Ranking</button>
+    <button class="nav-link" id="nav-admin" onclick="openAdmin()">🔒 Admin</button>
   </div>
 </header>
 
@@ -88,7 +96,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
       <p>Módulo 2 · Curso de Tecnologia em Gestão de Recursos Humanos</p>
       <p style="margin-top:.2rem;font-size:12px;opacity:.65">Prof.ª Cátia Regina França de Sousa Gaião e Silva, DSc</p>
       <div class="hero-meta">
-        <span class="hero-tag">35 questões no banco</span>
+        <span class="hero-tag" id="htag-bank">questões no banco</span>
         <span class="hero-tag" id="htag-count"></span>
         <span class="hero-tag">🏆 Ranking global</span>
       </div>
@@ -181,11 +189,79 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
     </div>
   </div>
 
+  <!-- ADMIN LOGIN -->
+  <div id="admin-login" class="screen">
+    <div class="card" style="max-width:380px;margin:2rem auto">
+      <h2 style="font-size:18px;font-weight:600;margin-bottom:.5rem">🔒 Área Admin</h2>
+      <p style="margin-bottom:1rem">Introduz a senha de administrador para gerir perguntas, ranking e configurações.</p>
+      <div style="display:flex;flex-direction:column;gap:.75rem">
+        <input class="name-input" id="admin-pass" type="password" placeholder="Senha" onkeydown="if(event.key==='Enter')checkAdminPass()">
+        <div id="admin-login-err" style="color:#A32D2D;font-size:12px;display:none">Senha incorreta.</div>
+        <button class="btn btn-primary" onclick="checkAdminPass()">Entrar</button>
+        <button class="btn" onclick="goHome()">Cancelar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ADMIN PANEL -->
+  <div id="admin" class="screen">
+    <div class="rank-title">🔒 Painel Admin</div>
+    <div class="admin-tabs">
+      <button class="btn btn-primary btn-xs" id="atab-config" onclick="showAdminTab('config')">⚙️ Configurações</button>
+      <button class="btn btn-xs" id="atab-quest" onclick="showAdminTab('quest')">📝 Perguntas</button>
+      <button class="btn btn-xs" id="atab-rank" onclick="showAdminTab('rank')">🏆 Ranking</button>
+      <button class="btn btn-xs" onclick="adminLogout()">Sair</button>
+    </div>
+
+    <div id="admin-config" class="admin-tab">
+      <div class="card-sm">
+        <label class="small">Nº de questões por avaliação</label>
+        <input class="name-input" type="number" id="cfg-total" min="1" max="200" style="margin-bottom:.75rem">
+        <label class="small">Tempo limite da avaliação, em minutos (0 = sem limite, cronómetro conta a subir)</label>
+        <input class="name-input" type="number" id="cfg-timelimit" min="0">
+        <button class="btn btn-primary" onclick="saveConfig()" style="margin-top:.75rem">Guardar configurações</button>
+        <div id="cfg-status" style="font-size:12px;margin-top:.5rem"></div>
+      </div>
+    </div>
+
+    <div id="admin-quest" class="admin-tab" style="display:none">
+      <div class="card-sm" style="margin-bottom:1rem">
+        <p style="font-weight:600;margin-bottom:.5rem">+ Adicionar nova questão</p>
+        <input class="name-input" id="nq-topic" placeholder="Tópico (ex: Recrutamento Interno)" style="margin-bottom:.5rem">
+        <textarea class="name-input" id="nq-text" placeholder="Enunciado da questão" style="margin-bottom:.5rem;min-height:60px"></textarea>
+        <input class="name-input" id="nq-opt0" placeholder="Alternativa A" style="margin-bottom:.5rem">
+        <input class="name-input" id="nq-opt1" placeholder="Alternativa B" style="margin-bottom:.5rem">
+        <input class="name-input" id="nq-opt2" placeholder="Alternativa C" style="margin-bottom:.5rem">
+        <input class="name-input" id="nq-opt3" placeholder="Alternativa D" style="margin-bottom:.5rem">
+        <label class="small">Alternativa correta</label>
+        <select class="name-input" id="nq-ans" style="margin-bottom:.5rem">
+          <option value="0">A</option><option value="1">B</option><option value="2">C</option><option value="3">D</option>
+        </select>
+        <textarea class="name-input" id="nq-expl" placeholder="Explicação (aparece depois de responder)" style="margin-bottom:.5rem;min-height:50px"></textarea>
+        <button class="btn btn-primary" onclick="addQuestion()">Adicionar questão</button>
+        <div id="nq-status" style="font-size:12px;margin-top:.5rem"></div>
+      </div>
+      <div id="admin-quest-list"><div style="color:#888780;font-size:13px">A carregar...</div></div>
+    </div>
+
+    <div id="admin-rank" class="admin-tab" style="display:none">
+      <button class="btn btn-xs btn-danger" style="margin-bottom:1rem" onclick="clearRanking()">🗑 Zerar ranking inteiro</button>
+      <div id="admin-rank-list"><div style="color:#888780;font-size:13px">A carregar...</div></div>
+    </div>
+  </div>
+
 </div>
 
 <script>
 const FIREBASE_URL = "https://quiz-recrutamento-e-selecao-default-rtdb.firebaseio.com";
-const TOTAL = 10;
+
+/* ======= SENHA DO ADMIN =======
+   Muda o texto abaixo para a tua senha antes de publicar o site. */
+const ADMIN_PASSWORD = "unisuam2026";
+/* =============================== */
+
+let TOTAL = 10;          // nº de questões por avaliação (vem da config, com este valor por defeito)
+let TIME_LIMIT_MIN = 0;  // 0 = sem limite de tempo
 
 const ALL_Q=[
 {t:"Conceito de Recrutamento",q:"Segundo Marras (2000), agregar pessoas é atividade fundamental da estratégia de toda organização que procura aplicar o recrutamento e a seleção como parte de um mesmo processo. Como esse processo é denominado?",opts:["Provisão de recursos humanos","Avaliação de desempenho","Diagnóstico de clima organizacional","Gestão por competências"],ans:0,e:"Marras (2000) define esse processo conjunto como 'a provisão de recursos humanos'."},
@@ -216,7 +292,7 @@ const ALL_Q=[
 {t:"TICs e RH",q:"Com a implementação das TICs, o RH transita de um modelo tradicional para um RH Estratégico. O que caracteriza o RH Estratégico?",opts:["Foco em tarefas manuais e burocracia","Atuação como parceiro estratégico do negócio, focado em desenvolvimento de capital humano","Concentração em folha de pagamento e controle de presença","Dependência de métodos convencionais como memorandos"],ans:1,e:"O RH Estratégico atua como parceiro de negócio focado em capital humano, talentos e cultura organizacional."},
 {t:"TICs e RH",q:"O uso de analytics no RH possibilita:",opts:["Substituir completamente as entrevistas de seleção","Analisar desempenho, engajamento e rotatividade para antecipar necessidades","Eliminar a necessidade de avaliação de desempenho","Automatizar a demissão de colaboradores"],ans:1,e:"Analytics permite análise detalhada de desempenho e engajamento, auxiliando o RH a antecipar necessidades."},
 {t:"IA no Processo Seletivo",q:"Como a IA pode contribuir na triagem de currículos?",opts:["Substituindo completamente a decisão humana de contratação","Automatizando a leitura e o filtro inicial, identificando candidatos alinhados aos requisitos da vaga","Eliminando a necessidade de entrevistas","Gerando automaticamente o contrato de trabalho"],ans:1,e:"A IA automatiza a triagem inicial, identificando rapidamente candidatos que se encaixam nos requisitos da vaga."},
-{t:"IA no Processo Seletivo",q:"A redução de viés na seleção por meio de IA ocorre quando:",opts:["Todos os candidatos são avaliados pelo mesmo gestor","Algoritmos bem configurados minimizam preconceitos inconscientes, focando nas qualidades reais do candidato","A IA substitui completamente o RH no processo","Os candidatos preenchem formulários anônimos"],ans:1,e:"Algoritmos bem configurados podem minimizar preconceitos inconscientes, tornando a seleção mais justa."},
+{t:"IA no Processo Seletivo",q:"A redução de viés na seleção por meio de IA ocorre quando:",opts:["Todos os candidatos são avaliados pelo mesmo gestor","Algoritmos bem configurados minimizam preconceitos inconscientes, focando nas qualidades reais do candidato","A IA substitui completamente o RH no processo","Os candidatos preenchem formulários anónimos"],ans:1,e:"Algoritmos bem configurados podem minimizar preconceitos inconscientes, tornando a seleção mais justa."},
 {t:"Clima Organizacional",q:"O diagnóstico de clima organizacional visa identificar:",opts:["Apenas os problemas financeiros da empresa","Como os colaboradores percebem o ambiente de trabalho, as práticas da empresa e suas condições para desempenhar funções","Exclusivamente o nível de satisfação com a remuneração","O desempenho individual de cada colaborador"],ans:1,e:"O diagnóstico de clima identifica como os colaboradores percebem o ambiente e as condições de trabalho."},
 {t:"Clima Organizacional",q:"Para garantir a credibilidade do diagnóstico de clima organizacional, é fundamental:",opts:["Identificar os respondentes pelo nome para responsabilizá-los","Assegurar anonimato, explicar a finalidade e demonstrar que os resultados gerarão melhorias reais","Aplicar o questionário apenas para gestores","Divulgar os resultados individualmente para cada colaborador"],ans:1,e:"A credibilidade depende de anonimato, transparência sobre a finalidade e compromisso com melhorias reais."},
 {t:"Clima Organizacional",q:"O diagnóstico de clima organizacional só gera valor quando:",opts:["Os resultados são mantidos em sigilo pela diretoria","Resulta em melhorias concretas, com prioridades, responsáveis, metas mensuráveis e prazos","É realizado anualmente por consultoria externa","Os colaboradores participam de forma voluntária apenas"],ans:1,e:"O diagnóstico precisa resultar em um plano de ação com prioridades, responsáveis, metas e prazos definidos."},
@@ -226,28 +302,63 @@ const ALL_Q=[
 {t:"Avaliação de Desempenho",q:"A avaliação de desempenho, sob a perspectiva de 'Relacionamento e Percepção', proporciona:",opts:["Apenas métricas numéricas de produtividade","Meios para que cada funcionário saiba o que pessoas ao seu redor pensam, melhorando sua autopercepção","Exclusivamente dados para promoção salarial","Um sistema de punição para baixo desempenho"],ans:1,e:"A avaliação melhora a autopercepção do colaborador e seu relacionamento interpessoal no trabalho."},
 ];
 
+let QUESTION_BANK = {};   // banco de questões vindo do Firebase: {chave: {t,q,opts,ans,e}}
 let session=[],cur=0,sc=0,chosen=null,playerName='';
-let timerInterval=null,elapsedSecs=0;
-
-document.getElementById('htag-count').textContent=TOTAL+' por avaliação';
-document.getElementById('home-how').innerHTML='Cada avaliação sorteia <strong>'+TOTAL+'</strong> questões aleatórias. O resultado entra no <strong style="color:#534AB7">ranking global</strong> — ordenado por acertos e, em empate, por tempo.';
+let timerInterval=null,elapsedSecs=0,limitSecs=0;
+let adminLoggedIn=false;
 
 function shuffle(a){let b=[...a];for(let i=b.length-1;i>0;i--){let j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]]}return b}
-
 function fmtTime(s){const m=Math.floor(s/60);const ss=s%60;return m+'m '+String(ss).padStart(2,'0')+'s';}
 function fmtTimeShort(s){const m=Math.floor(s/60);const ss=s%60;return m+':'+String(ss).padStart(2,'0');}
+function escHtml(s){return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function escAttr(s){return (s||'').replace(/"/g,'&quot;');}
 
-function startTimer(){
-  elapsedSecs=0;
-  document.getElementById('timer-display').textContent='0:00';
-  clearInterval(timerInterval);
-  timerInterval=setInterval(()=>{elapsedSecs++;document.getElementById('timer-display').textContent=fmtTimeShort(elapsedSecs);},1000);
+/* ============ CONFIG / BOOT ============ */
+
+async function loadConfigFromFirebase(){
+  try{
+    const res=await fetch(FIREBASE_URL+'/config.json');
+    const data=await res.json();
+    if(data){
+      if(data.total) TOTAL=data.total;
+      if(typeof data.timeLimit==='number') TIME_LIMIT_MIN=data.timeLimit;
+    }
+  }catch(e){}
 }
-function stopTimer(){clearInterval(timerInterval);}
+
+async function loadQuestionsFromFirebase(){
+  try{
+    const res=await fetch(FIREBASE_URL+'/questions.json');
+    const data=await res.json();
+    if(data && Object.keys(data).length>0){ QUESTION_BANK=data; return; }
+  }catch(e){}
+  // se ainda não houver nada no Firebase, semeia com o banco local original
+  const seed={};
+  ALL_Q.forEach((q,i)=>{ seed['q'+i]=q; });
+  try{
+    await fetch(FIREBASE_URL+'/questions.json',{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(seed)});
+  }catch(e){}
+  QUESTION_BANK=seed;
+}
+
+async function init(){
+  await Promise.all([loadConfigFromFirebase(), loadQuestionsFromFirebase()]);
+  refreshHomeTags();
+  goHome();
+}
+
+function refreshHomeTags(){
+  const n=Object.keys(QUESTION_BANK).length;
+  document.getElementById('htag-bank').textContent=n+' questões no banco';
+  document.getElementById('htag-count').textContent=TOTAL+' por avaliação';
+  document.getElementById('home-how').innerHTML='Cada avaliação sorteia <strong>'+TOTAL+'</strong> questões aleatórias'+(TIME_LIMIT_MIN>0?' e tem um limite de <strong>'+TIME_LIMIT_MIN+' min</strong>':'')+'. O resultado entra no <strong style="color:#534AB7">ranking global</strong> — ordenado por acertos e, em empate, por tempo.';
+}
+
+/* ============ NAVEGAÇÃO ============ */
 
 function setNav(id){
   document.querySelectorAll('.nav-link').forEach(n=>n.classList.remove('active'));
-  const map={home:'nav-home',ranking:'nav-rank'};
+  const map={home:'nav-home',ranking:'nav-rank',admin:'nav-admin'};
   if(map[id])document.getElementById(map[id]).classList.add('active');
 }
 function showScreen(id){
@@ -267,17 +378,22 @@ function confirmName(){
   if(!n){document.getElementById('player-name').focus();return;}
   playerName=n;startQuiz();
 }
+
+/* ============ QUIZ ============ */
+
 function startQuiz(){
-  session=shuffle(ALL_Q).slice(0,TOTAL);
+  const pool=Object.values(QUESTION_BANK);
+  session=shuffle(pool).slice(0,Math.min(TOTAL,pool.length));
   cur=0;sc=0;chosen=null;
   showScreen('quiz');setNav('');
   startTimer();renderQ();
 }
 function renderQ(){
   const q=session[cur];
-  document.getElementById('q-label').textContent='Questão '+(cur+1)+' / '+TOTAL;
+  const total=session.length;
+  document.getElementById('q-label').textContent='Questão '+(cur+1)+' / '+total;
   document.getElementById('q-topic').textContent=q.t;
-  document.getElementById('prog').style.width=Math.round((cur/TOTAL)*100)+'%';
+  document.getElementById('prog').style.width=Math.round((cur/total)*100)+'%';
   document.getElementById('q-text').textContent=q.q;
   document.getElementById('q-expl').style.display='none';
   document.getElementById('next-btn').style.display='none';
@@ -286,7 +402,7 @@ function renderQ(){
   const shuf=shuffle(q.opts.map((o,i)=>({o,i})));
   document.getElementById('opts').innerHTML=shuf.map((item,idx)=>`
     <div class="opt" onclick="pick(this,${item.i},${q.ans})" data-idx="${item.i}">
-      <span class="letter">${letters[idx]}</span><span>${item.o}</span>
+      <span class="letter">${letters[idx]}</span><span>${escHtml(item.o)}</span>
     </div>`).join('');
   chosen=null;
 }
@@ -302,7 +418,33 @@ function pick(el,idx,ans){
   document.getElementById('next-btn').style.display='inline-flex';
   document.getElementById('live-score').textContent=sc+' acerto'+(sc!==1?'s':'')+' até agora';
 }
-function nextQ(){cur++;if(cur>=TOTAL){finishQuiz();return;}renderQ();}
+function nextQ(){cur++;if(cur>=session.length){finishQuiz();return;}renderQ();}
+
+/* ============ TEMPORIZADOR ============ */
+
+function startTimer(){
+  elapsedSecs=0;
+  limitSecs = TIME_LIMIT_MIN>0 ? TIME_LIMIT_MIN*60 : 0;
+  updateTimerDisplay();
+  clearInterval(timerInterval);
+  timerInterval=setInterval(()=>{
+    elapsedSecs++;
+    if(limitSecs>0 && elapsedSecs>=limitSecs){
+      updateTimerDisplay();
+      stopTimer();
+      finishQuiz();
+      return;
+    }
+    updateTimerDisplay();
+  },1000);
+}
+function stopTimer(){clearInterval(timerInterval);}
+function updateTimerDisplay(){
+  const show = limitSecs>0 ? Math.max(limitSecs-elapsedSecs,0) : elapsedSecs;
+  document.getElementById('timer-display').textContent=fmtTimeShort(show);
+}
+
+/* ============ RANKING (Firebase) ============ */
 
 async function saveToFirebase(entry){
   try{
@@ -315,24 +457,25 @@ async function loadFromFirebase(){
     const res=await fetch(FIREBASE_URL+'/ranking.json');
     const data=await res.json();
     if(!data)return[];
-    return Object.values(data);
+    return Object.entries(data).map(([k,v])=>({...v,_key:k}));
   }catch(e){return[];}
 }
 
 async function finishQuiz(){
   stopTimer();
-  const pct=Math.round((sc/TOTAL)*100);
+  const total=session.length;
+  const pct=Math.round((sc/total)*100);
   const now=new Date();
-  const entry={name:playerName,score:sc,total:TOTAL,pct,secs:elapsedSecs,timeStr:fmtTime(elapsedSecs),date:now.toLocaleDateString('pt-BR'),ts:now.getTime()};
-  document.getElementById('score-num').textContent=sc+'/'+TOTAL;
-  const msg=sc===TOTAL?'🏆 Perfeito! Excelente domínio do conteúdo!':sc>=TOTAL*0.8?'🎉 Ótimo resultado! Continue assim!':sc>=TOTAL*0.6?'👍 Bom trabalho! Ainda há espaço para melhorar.':sc>=TOTAL*0.5?'📖 Regular. Revise os tópicos com mais atenção.':'💪 Revise o conteúdo e tente novamente!';
+  const entry={name:playerName,score:sc,total,pct,secs:elapsedSecs,timeStr:fmtTime(elapsedSecs),date:now.toLocaleDateString('pt-BR'),ts:now.getTime()};
+  document.getElementById('score-num').textContent=sc+'/'+total;
+  const msg=sc===total?'🏆 Perfeito! Excelente domínio do conteúdo!':sc>=total*0.8?'🎉 Ótimo resultado! Continue assim!':sc>=total*0.6?'👍 Bom trabalho! Ainda há espaço para melhorar.':sc>=total*0.5?'📖 Regular. Revise os tópicos com mais atenção.':'💪 Revise o conteúdo e tente novamente!';
   document.getElementById('score-msg').textContent=msg;
   document.getElementById('b-acc').textContent='✓ '+sc+' acerto'+(sc!==1?'s':'');
-  document.getElementById('b-err').textContent='✗ '+(TOTAL-sc)+' erro'+((TOTAL-sc)!==1?'s':'');
+  document.getElementById('b-err').textContent='✗ '+(total-sc)+' erro'+((total-sc)!==1?'s':'');
   document.getElementById('b-pct').textContent=pct+'%';
   document.getElementById('b-time').textContent='⏱ '+fmtTime(elapsedSecs);
   document.getElementById('st-acc').textContent=sc;
-  document.getElementById('st-err').textContent=TOTAL-sc;
+  document.getElementById('st-err').textContent=total-sc;
   document.getElementById('st-pct').textContent=pct+'%';
   document.getElementById('st-time').textContent=fmtTime(elapsedSecs);
   showScreen('result');
@@ -356,7 +499,7 @@ async function loadRanking(containerId,limit){
     const medal=isTop?`<span class="rank-medal">${medals[i]}</span>`:`<span class="rank-num">${i+1}</span>`;
     return`<div class="rank-row${isTop?' top3':''}">
       ${medal}
-      <span class="rank-name">${h.name||'Anónimo'}</span>
+      <span class="rank-name">${escHtml(h.name||'Anónimo')}</span>
       <span class="rank-dots"></span>
       <div class="rank-right">
         <span class="rank-score">${h.score}/${total}</span>
@@ -367,7 +510,191 @@ async function loadRanking(containerId,limit){
   el.innerHTML=`<div class="card-sm">${rows}</div>`;
 }
 
-goHome();
+/* ============ ADMIN: LOGIN ============ */
+
+function openAdmin(){
+  if(adminLoggedIn){ enterAdmin(); return; }
+  showScreen('admin-login');setNav('');
+  document.getElementById('admin-pass').value='';
+  document.getElementById('admin-login-err').style.display='none';
+  setTimeout(()=>document.getElementById('admin-pass').focus(),100);
+}
+function checkAdminPass(){
+  const val=document.getElementById('admin-pass').value;
+  if(val===ADMIN_PASSWORD){ adminLoggedIn=true; enterAdmin(); }
+  else{ document.getElementById('admin-login-err').style.display='block'; }
+}
+function adminLogout(){ adminLoggedIn=false; goHome(); }
+function enterAdmin(){
+  showScreen('admin');
+  document.getElementById('cfg-total').value=TOTAL;
+  document.getElementById('cfg-timelimit').value=TIME_LIMIT_MIN;
+  showAdminTab('config');
+}
+function showAdminTab(tab){
+  document.querySelectorAll('.admin-tab').forEach(t=>t.style.display='none');
+  document.getElementById('admin-'+tab).style.display='block';
+  document.querySelectorAll('[id^="atab-"]').forEach(b=>b.classList.remove('btn-primary'));
+  document.getElementById('atab-'+tab).classList.add('btn-primary');
+  if(tab==='quest')renderAdminQuestions();
+  if(tab==='rank')renderAdminRanking();
+}
+
+/* ============ ADMIN: CONFIGURAÇÕES ============ */
+
+async function saveConfig(){
+  const total=Math.max(1,parseInt(document.getElementById('cfg-total').value)||10);
+  const tl=Math.max(0,parseInt(document.getElementById('cfg-timelimit').value)||0);
+  const statusEl=document.getElementById('cfg-status');
+  try{
+    await fetch(FIREBASE_URL+'/config.json',{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({total,timeLimit:tl})});
+    TOTAL=total; TIME_LIMIT_MIN=tl;
+    refreshHomeTags();
+    statusEl.style.color='#3B6D11';
+    statusEl.textContent='✅ Configurações guardadas!';
+  }catch(e){
+    statusEl.style.color='#A32D2D';
+    statusEl.textContent='⚠️ Erro ao guardar. Verifica a ligação.';
+  }
+}
+
+/* ============ ADMIN: PERGUNTAS ============ */
+
+function renderAdminQuestions(){
+  const el=document.getElementById('admin-quest-list');
+  const keys=Object.keys(QUESTION_BANK);
+  if(!keys.length){el.innerHTML='<div class="empty">Sem questões no banco.</div>';return;}
+  el.innerHTML=keys.map(k=>{
+    const q=QUESTION_BANK[k];
+    return `<div class="card-sm" style="margin-bottom:.6rem">
+      <div class="qcard-row">
+        <div style="flex:1;min-width:0">
+          <span class="badge bn">${escHtml(q.t)}</span>
+          <p style="margin-top:.4rem;font-size:13px">${escHtml(q.q)}</p>
+        </div>
+        <div class="qcard-actions">
+          <button class="btn btn-xs" onclick="toggleEditQuestion('${k}')">Editar</button>
+          <button class="btn btn-xs btn-danger" onclick="deleteQuestion('${k}')">Eliminar</button>
+        </div>
+      </div>
+      <div id="qedit-${k}" style="display:none;margin-top:.75rem;border-top:1px solid #e0ddd6;padding-top:.75rem"></div>
+    </div>`;
+  }).join('');
+}
+
+function toggleEditQuestion(k){
+  const box=document.getElementById('qedit-'+k);
+  if(box.style.display==='block'){box.style.display='none';return;}
+  const q=QUESTION_BANK[k];
+  box.innerHTML=`
+    <label class="small">Tópico</label>
+    <input class="name-input" id="eq-topic-${k}" value="${escAttr(q.t)}" style="margin-bottom:.5rem">
+    <label class="small">Enunciado</label>
+    <textarea class="name-input" id="eq-text-${k}" style="margin-bottom:.5rem;min-height:60px">${escHtml(q.q)}</textarea>
+    <label class="small">Alternativas</label>
+    ${q.opts.map((o,i)=>`<input class="name-input" id="eq-opt${i}-${k}" value="${escAttr(o)}" style="margin-bottom:.4rem">`).join('')}
+    <label class="small">Alternativa correta</label>
+    <select class="name-input" id="eq-ans-${k}" style="margin-bottom:.5rem">
+      ${['A','B','C','D'].map((l,i)=>`<option value="${i}" ${i===q.ans?'selected':''}>${l}</option>`).join('')}
+    </select>
+    <label class="small">Explicação</label>
+    <textarea class="name-input" id="eq-expl-${k}" style="margin-bottom:.5rem;min-height:50px">${escHtml(q.e)}</textarea>
+    <button class="btn btn-primary btn-xs" onclick="saveQuestion('${k}')">Guardar alterações</button>`;
+  box.style.display='block';
+}
+
+async function saveQuestion(k){
+  const updated={
+    t: document.getElementById('eq-topic-'+k).value.trim(),
+    q: document.getElementById('eq-text-'+k).value.trim(),
+    opts:[0,1,2,3].map(i=>document.getElementById('eq-opt'+i+'-'+k).value.trim()),
+    ans: parseInt(document.getElementById('eq-ans-'+k).value),
+    e: document.getElementById('eq-expl-'+k).value.trim()
+  };
+  try{
+    await fetch(FIREBASE_URL+'/questions/'+k+'.json',{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(updated)});
+    QUESTION_BANK[k]=updated;
+    renderAdminQuestions();
+  }catch(e){ alert('Erro ao guardar a questão.'); }
+}
+
+async function deleteQuestion(k){
+  if(!confirm('Eliminar esta questão do banco?'))return;
+  try{
+    await fetch(FIREBASE_URL+'/questions/'+k+'.json',{method:'DELETE'});
+    delete QUESTION_BANK[k];
+    renderAdminQuestions();
+    refreshHomeTags();
+  }catch(e){ alert('Erro ao eliminar a questão.'); }
+}
+
+async function addQuestion(){
+  const t=document.getElementById('nq-topic').value.trim();
+  const qt=document.getElementById('nq-text').value.trim();
+  const opts=[0,1,2,3].map(i=>document.getElementById('nq-opt'+i).value.trim());
+  const ans=parseInt(document.getElementById('nq-ans').value);
+  const e=document.getElementById('nq-expl').value.trim();
+  const statusEl=document.getElementById('nq-status');
+  if(!t||!qt||opts.some(o=>!o)||!e){
+    statusEl.style.color='#A32D2D';
+    statusEl.textContent='⚠️ Preenche todos os campos antes de adicionar.';
+    return;
+  }
+  const newQ={t,q:qt,opts,ans,e};
+  try{
+    const res=await fetch(FIREBASE_URL+'/questions.json',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(newQ)});
+    const data=await res.json();
+    QUESTION_BANK[data.name]=newQ;
+    ['nq-topic','nq-text','nq-opt0','nq-opt1','nq-opt2','nq-opt3','nq-expl'].forEach(id=>document.getElementById(id).value='');
+    document.getElementById('nq-ans').value='0';
+    statusEl.style.color='#3B6D11';
+    statusEl.textContent='✅ Questão adicionada ao banco!';
+    renderAdminQuestions();
+    refreshHomeTags();
+  }catch(err){
+    statusEl.style.color='#A32D2D';
+    statusEl.textContent='⚠️ Erro ao guardar. Verifica a ligação.';
+  }
+}
+
+/* ============ ADMIN: RANKING ============ */
+
+async function renderAdminRanking(){
+  const el=document.getElementById('admin-rank-list');
+  el.innerHTML='<div style="color:#888780;font-size:13px">A carregar...</div>';
+  const entries=await loadFromFirebase();
+  if(!entries.length){el.innerHTML='<div class="empty">Sem registos no ranking.</div>';return;}
+  entries.sort((a,b)=>b.score-a.score||(a.secs||9999)-(b.secs||9999));
+  el.innerHTML='<div class="card-sm">'+entries.map((h,i)=>`
+    <div class="rank-row">
+      <span class="rank-num">${i+1}</span>
+      <span class="rank-name">${escHtml(h.name||'Anónimo')}</span>
+      <span class="rank-dots"></span>
+      <div class="rank-right">
+        <span class="rank-score">${h.score}/${h.total||TOTAL}</span>
+        <span class="rank-time">${h.timeStr||'—'}</span>
+        <button class="btn btn-xs btn-danger" onclick="deleteRankEntry('${h._key}')">Eliminar</button>
+      </div>
+    </div>`).join('')+'</div>';
+}
+
+async function deleteRankEntry(key){
+  if(!confirm('Eliminar este registo do ranking?'))return;
+  try{
+    await fetch(FIREBASE_URL+'/ranking/'+key+'.json',{method:'DELETE'});
+    renderAdminRanking();
+  }catch(e){ alert('Erro ao eliminar o registo.'); }
+}
+
+async function clearRanking(){
+  if(!confirm('Isto vai apagar TODO o ranking, para todos os participantes. Tens a certeza?'))return;
+  try{
+    await fetch(FIREBASE_URL+'/ranking.json',{method:'DELETE'});
+    renderAdminRanking();
+  }catch(e){ alert('Erro ao zerar o ranking.'); }
+}
+
+init();
 </script>
 </body>
 </html>
