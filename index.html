@@ -7,14 +7,17 @@
 <title>Quiz — Recrutamento e Seleção · UNISUAM</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#f4f2ee;min-height:100vh;color:#1a1a18;font-size:15px;line-height:1.6}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#f4f2ee;min-height:100vh;color:#1a1a18;font-size:15px;line-height:1.6;transition:background .2s,color .2s}
 .page{max-width:720px;margin:0 auto;padding:1.5rem 1rem}
 .screen{display:none}.screen.active{display:block}
 .site-header{background:#fff;border-bottom:1px solid #e0ddd6;padding:.75rem 1.25rem;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:10;flex-wrap:wrap;gap:.5rem}
 .logo{font-size:14px;font-weight:600;color:#1a1a18;display:flex;align-items:center;gap:8px}
 .logo-dot{width:9px;height:9px;border-radius:50%;background:#534AB7}
+.header-right{display:flex;align-items:center;gap:4px;flex-wrap:wrap}
 .nav-link{font-size:13px;color:#888780;cursor:pointer;padding:4px 10px;border-radius:6px;transition:background .15s;border:none;background:transparent;font-family:inherit}
 .nav-link:hover,.nav-link.active{background:#EEEDFE;color:#534AB7}
+.theme-toggle{background:none;border:1px solid #d3d1c7;border-radius:8px;width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:14px;margin-left:2px;transition:background .15s;color:#1a1a18;flex-shrink:0}
+.theme-toggle:hover{background:#f4f2ee}
 .card{background:#fff;border:1px solid #e0ddd6;border-radius:14px;padding:1.5rem}
 .card-sm{background:#fff;border:1px solid #e0ddd6;border-radius:10px;padding:1rem 1.25rem}
 .badge{display:inline-block;font-size:12px;padding:3px 10px;border-radius:6px;font-weight:500}
@@ -75,16 +78,79 @@ textarea.name-input{resize:vertical;font-family:inherit}
 .btn-xs{padding:.3rem .6rem;font-size:11px}
 .btn-danger{border-color:#A32D2D;color:#A32D2D}
 label.small{font-size:12px;color:#5f5e5a;display:block;margin-bottom:.25rem}
+
+/* ── DARK MODE ────────────────────────────────────────────────── */
+body.dark{background:#17171b;color:#e6e4dd}
+body.dark .site-header{background:#1f1e23;border-color:#2c2b30}
+body.dark .logo{color:#e6e4dd}
+body.dark .nav-link{color:#8f8d85}
+body.dark .nav-link:hover{background:#26252b}
+body.dark .nav-link.active{background:#2f2a4a;color:#b39ded}
+body.dark .theme-toggle{border-color:#3a393f;color:#e6e4dd}
+body.dark .theme-toggle:hover{background:#26252b}
+
+body.dark .card,body.dark .card-sm{background:#201f24;border-color:#2c2b30}
+
+body.dark .bp{background:#322b57;color:#c9baf7}
+body.dark .bg{background:#243318;color:#a9d47b}
+body.dark .br{background:#3a1f1f;color:#e8a3a3}
+body.dark .ba{background:#3a2c12;color:#e8c07f}
+body.dark .bn{background:#2a2924;color:#b8b6ae}
+
+body.dark .prog-wrap{background:#2c2b30}
+
+body.dark .opt{background:#201f24;border-color:#2c2b30;color:#e6e4dd}
+body.dark .opt:hover{background:#26252b;border-color:#4a4850}
+body.dark .opt.correct{border-color:#6a9a3a;background:#213318;color:#b9dd8a}
+body.dark .opt.wrong{border-color:#a35050;background:#3a2020;color:#e8b0b0}
+body.dark .letter{border-color:#3a393f;color:#8f8d85}
+body.dark .opt.correct .letter{border-color:#6a9a3a;background:#375222;color:#cfe9a6}
+body.dark .opt.wrong .letter{border-color:#a35050;background:#4a2626;color:#f0bcbc}
+
+body.dark .btn{background:#201f24;border-color:#3a393f;color:#e6e4dd}
+body.dark .btn:hover{background:#26252b}
+body.dark .btn-primary{background:#7c5ce0;border-color:#7c5ce0;color:#fff}
+body.dark .btn-primary:hover{background:#6247c9}
+body.dark .btn-outline{color:#b39ded;border-color:#7c5ce0}
+body.dark .btn-outline:hover{background:#2f2a4a}
+body.dark .btn-danger{border-color:#c96b6b;color:#e8a3a3}
+
+body.dark .expl{background:#201f24;border-left-color:#7c5ce0;color:#b8b6ae}
+
+body.dark .score-big{color:#e6e4dd}
+body.dark .score-sub{color:#8f8d85}
+body.dark .stat{background:#201f24}
+body.dark .stat-label{color:#8f8d85}
+body.dark .stat-val{color:#e6e4dd}
+
+body.dark .empty{color:#8f8d85}
+body.dark .name-input{background:#201f24;border-color:#3a393f;color:#e6e4dd}
+body.dark .name-input:focus{border-color:#7c5ce0}
+body.dark .name-input::placeholder{color:#6b6960}
+body.dark .shared-note{background:#201f24;color:#8f8d85}
+body.dark .timer-wrap{color:#8f8d85}
+
+body.dark .rank-title{color:#e6e4dd}
+body.dark .rank-row{border-color:#2c2b30}
+body.dark .rank-row.top3{background:#3a2c12}
+body.dark .rank-num{color:#8f8d85}
+body.dark .rank-name{color:#e6e4dd}
+body.dark .rank-dots{border-color:#4a4850}
+body.dark .rank-score{color:#c9baf7}
+body.dark .rank-time{color:#8f8d85}
+
+body.dark label.small{color:#a6a49c}
 </style>
 </head>
 <body>
 
 <header class="site-header">
   <div class="logo"><span class="logo-dot"></span>Quiz RH · UNISUAM</div>
-  <div style="display:flex;gap:4px">
+  <div class="header-right">
     <button class="nav-link active" id="nav-home" onclick="goHome()">Início</button>
     <button class="nav-link" id="nav-rank" onclick="goRanking()">Ranking</button>
     <button class="nav-link" id="nav-admin" onclick="openAdmin()">🔒 Admin</button>
+    <button class="theme-toggle" id="theme-toggle" onclick="toggleTheme()" title="Alternar modo escuro">🌙</button>
   </div>
 </header>
 
@@ -314,6 +380,20 @@ function fmtTimeShort(s){const m=Math.floor(s/60);const ss=s%60;return m+':'+Str
 function escHtml(s){return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 function escAttr(s){return (s||'').replace(/"/g,'&quot;');}
 
+/* ============ TEMA (MODO ESCURO) ============ */
+function applyTheme(){
+  const saved=localStorage.getItem('quiz_rh_theme');
+  const isDark=saved==='dark';
+  document.body.classList.toggle('dark',isDark);
+  const btn=document.getElementById('theme-toggle');
+  if(btn)btn.textContent=isDark?'☀️':'🌙';
+}
+function toggleTheme(){
+  const isDark=document.body.classList.toggle('dark');
+  try{localStorage.setItem('quiz_rh_theme',isDark?'dark':'light');}catch(e){}
+  document.getElementById('theme-toggle').textContent=isDark?'☀️':'🌙';
+}
+
 /* ============ CONFIG / BOOT ============ */
 
 async function loadConfigFromFirebase(){
@@ -343,6 +423,7 @@ async function loadQuestionsFromFirebase(){
 }
 
 async function init(){
+  applyTheme();
   await Promise.all([loadConfigFromFirebase(), loadQuestionsFromFirebase()]);
   refreshHomeTags();
   goHome();
