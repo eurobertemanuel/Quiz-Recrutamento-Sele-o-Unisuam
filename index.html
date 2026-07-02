@@ -79,6 +79,34 @@ textarea.name-input{resize:vertical;font-family:inherit}
 .btn-danger{border-color:#A32D2D;color:#A32D2D}
 label.small{font-size:12px;color:#5f5e5a;display:block;margin-bottom:.25rem}
 
+/* ── ESTUDAR ──────────────────────────────────────────────────── */
+.study-hero{background:#534AB7;border-radius:14px;padding:1.25rem 1.5rem;color:#fff;margin-bottom:1.25rem}
+.study-hero h2{color:#fff;font-size:17px;margin-bottom:.25rem;font-weight:600}
+.study-hero p{color:rgba(255,255,255,.75);font-size:12px}
+.prog-label{font-size:11px;color:rgba(255,255,255,.7);margin-top:.3rem}
+.topic-card{background:#fff;border:1px solid #e0ddd6;border-radius:12px;margin-bottom:.75rem;overflow:hidden}
+.topic-header{display:flex;align-items:center;justify-content:space-between;padding:.9rem 1.1rem;cursor:pointer;user-select:none;transition:background .15s;gap:10px}
+.topic-header:hover{background:#f4f2ee}
+.topic-left{display:flex;align-items:center;gap:10px;min-width:0}
+.topic-icon{width:34px;height:34px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.topic-title{font-size:13px;font-weight:600;color:#1a1a18}
+.topic-sub{font-size:11px;color:#888780;margin-top:1px}
+.check-circle{width:22px;height:22px;border-radius:50%;border:1.5px solid #d3d1c7;display:flex;align-items:center;justify-content:center;font-size:11px;color:#888780;flex-shrink:0;transition:all .2s}
+.check-circle.done{background:#EAF3DE;border-color:#639922;color:#27500A}
+.chevron-icon{font-size:12px;color:#888780;transition:transform .2s;margin-left:4px;flex-shrink:0}
+.chevron-icon.open{transform:rotate(180deg)}
+.topic-body{display:none;padding:0 1.1rem 1.1rem;border-top:1px solid #e0ddd6}
+.topic-body.open{display:block}
+.topic-summary{font-size:13px;color:#5f5e5a;line-height:1.7;margin-top:.9rem;margin-bottom:.75rem}
+.key-point{display:flex;gap:8px;align-items:flex-start;margin-bottom:.4rem;font-size:12px;color:#5f5e5a;line-height:1.5}
+.kp-dot{width:5px;height:5px;border-radius:50%;background:#534AB7;flex-shrink:0;margin-top:5px}
+.highlight-box{background:#EEEDFE;border-radius:8px;padding:.6rem .9rem;font-size:12px;color:#3C3489;margin:.75rem 0;line-height:1.6}
+.topic-actions{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:.75rem}
+.btn-mark{font-size:12px;padding:.45rem .9rem;border-radius:7px}
+.btn-mark.marked{background:#EAF3DE;color:#27500A;border-color:#C0DD97}
+.btn-practice-sm{font-size:12px;padding:.45rem .9rem}
+.mode-badge{display:inline-flex;align-items:center;gap:6px;background:#E6F1FB;color:#185FA5;font-size:12px;padding:4px 10px;border-radius:6px;font-weight:500;margin-bottom:.75rem}
+
 /* ── DARK MODE ────────────────────────────────────────────────── */
 body.dark{background:#17171b;color:#e6e4dd}
 body.dark .site-header{background:#1f1e23;border-color:#2c2b30}
@@ -140,6 +168,22 @@ body.dark .rank-score{color:#c9baf7}
 body.dark .rank-time{color:#8f8d85}
 
 body.dark label.small{color:#a6a49c}
+
+body.dark .study-hero{background:#3a2c7a}
+body.dark .topic-card{background:#201f24;border-color:#2c2b30}
+body.dark .topic-header:hover{background:#26252b}
+body.dark .topic-title{color:#e6e4dd}
+body.dark .topic-sub{color:#8f8d85}
+body.dark .check-circle{border-color:#3a393f;color:#8f8d85}
+body.dark .check-circle.done{background:#213318;border-color:#6a9a3a;color:#cfe9a6}
+body.dark .chevron-icon{color:#8f8d85}
+body.dark .topic-body{border-color:#2c2b30}
+body.dark .topic-summary{color:#b8b6ae}
+body.dark .key-point{color:#b8b6ae}
+body.dark .kp-dot{background:#7c5ce0}
+body.dark .highlight-box{background:#2f2a4a;color:#c9baf7}
+body.dark .btn-mark.marked{background:#213318;color:#b9dd8a;border-color:#6a9a3a}
+body.dark .mode-badge{background:#1f3a52;color:#7cc0f0}
 </style>
 </head>
 <body>
@@ -148,6 +192,7 @@ body.dark label.small{color:#a6a49c}
   <div class="logo"><span class="logo-dot"></span>Quiz RH · UNISUAM</div>
   <div class="header-right">
     <button class="nav-link active" id="nav-home" onclick="goHome()">Início</button>
+    <button class="nav-link" id="nav-study" onclick="goStudy()">📖 Estudar</button>
     <button class="nav-link" id="nav-rank" onclick="goRanking()">Ranking</button>
     <button class="nav-link" id="nav-admin" onclick="openAdmin()">🔒 Admin</button>
     <button class="theme-toggle" id="theme-toggle" onclick="toggleTheme()" title="Alternar modo escuro">🌙</button>
@@ -172,11 +217,66 @@ body.dark label.small{color:#a6a49c}
       <p style="color:#1a1a18;font-weight:500;margin-bottom:.4rem">Como funciona</p>
       <p id="home-how"></p>
     </div>
-    <div style="margin-bottom:1.5rem">
+    <div style="display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:1.5rem">
       <button class="btn btn-primary" onclick="goName()" style="font-size:15px;padding:.7rem 1.75rem">Iniciar avaliação →</button>
+      <button class="btn btn-outline" onclick="goStudy()" style="font-size:15px;padding:.7rem 1.75rem">Estudar primeiro 📖</button>
     </div>
     <div class="rank-title">🏆 Ranking Geral</div>
     <div id="home-rank"><div style="color:#888780;font-size:13px;padding:.5rem 0">A carregar...</div></div>
+  </div>
+
+  <!-- STUDY (Estudar) -->
+  <div id="study" class="screen">
+    <div class="study-hero">
+      <h2>📖 Material de estudo</h2>
+      <p>Lê o resumo de cada tópico, confere os pontos-chave e a dica de prova — depois pratica as questões só daquele tema. O progresso fica guardado neste navegador.</p>
+      <div class="prog-wrap" style="margin:.75rem 0 .3rem;background:rgba(255,255,255,.25)"><div class="prog-fill" id="study-prog-fill" style="width:0%;background:#fff"></div></div>
+      <div class="prog-label" id="study-prog-label">0 de 8 tópicos revistos</div>
+    </div>
+    <div id="topic-list"></div>
+    <div style="margin-top:1rem">
+      <button class="btn btn-primary" onclick="goName()">Fazer avaliação completa →</button>
+    </div>
+  </div>
+
+  <!-- STUDY QUIZ (prática por tópico, não entra no ranking) -->
+  <div id="study-quiz" class="screen">
+    <div class="mode-badge">📖 Modo estudo — não conta para o ranking</div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.75rem;flex-wrap:wrap;gap:.5rem">
+      <span class="badge bp" id="sq-label"></span>
+      <span class="badge bn" id="sq-topic"></span>
+    </div>
+    <div class="prog-wrap"><div class="prog-fill" id="sq-prog" style="width:0%"></div></div>
+    <div class="card" style="margin-bottom:1rem">
+      <p id="sq-text" style="font-size:15px;color:#1a1a18;font-weight:500;line-height:1.6"></p>
+    </div>
+    <div id="sq-opts"></div>
+    <div class="expl" id="sq-expl"></div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:1.25rem">
+      <div id="sq-live" style="font-size:13px;color:#888780"></div>
+      <button class="btn btn-primary" id="sq-next" style="display:none" onclick="sqNext()">Próxima →</button>
+    </div>
+  </div>
+
+  <!-- STUDY RESULT -->
+  <div id="study-result" class="screen">
+    <div class="mode-badge">📖 Resultado do modo estudo</div>
+    <h2 style="font-size:18px;font-weight:600;margin-bottom:1rem">Resultado</h2>
+    <div class="card" style="margin-bottom:1.25rem">
+      <div class="score-big" id="sq-score-num"></div>
+      <div class="score-sub" id="sq-score-msg"></div>
+      <div class="badges-row">
+        <span class="badge bg" id="sq-b-acc"></span>
+        <span class="badge br" id="sq-b-err"></span>
+        <span class="badge ba" id="sq-b-pct"></span>
+      </div>
+      <p style="font-size:13px;color:#888780;margin-bottom:1rem">Este resultado <strong>não foi</strong> guardado no ranking — é só para treino. A partir de 70% de acertos, o tópico é marcado como revisto automaticamente.</p>
+      <div style="display:flex;gap:.5rem;flex-wrap:wrap">
+        <button class="btn btn-primary" id="sq-retry-btn">Repetir tópico →</button>
+        <button class="btn btn-outline" onclick="goStudy()">Outros tópicos</button>
+        <button class="btn" onclick="goName()">Fazer avaliação completa</button>
+      </div>
+    </div>
   </div>
 
   <!-- NAME -->
@@ -248,7 +348,7 @@ body.dark label.small{color:#a6a49c}
       <div class="rank-title" style="margin-bottom:0">🏆 Ranking Geral</div>
       <button class="btn" onclick="loadRanking('full-rank',50)" style="font-size:12px">↻ Atualizar</button>
     </div>
-    <p style="margin-bottom:1rem;font-size:13px;color:#5f5e5a">Ordenado por acertos — em caso de empate, quem terminou mais rápido fica na frente.</p>
+    <p style="margin-bottom:1rem;font-size:13px;color:#5f5e5a">Ordenado por acertos — em caso de empate, quem terminou mais rápido fica na frente. Só a avaliação completa entra aqui; o modo estudo não conta.</p>
     <div id="full-rank"><div style="color:#888780;font-size:13px">A carregar...</div></div>
     <div class="shared-note">🔒 Dados partilhados e visíveis para todos os participantes</div>
     <div style="margin-top:1rem">
@@ -295,6 +395,8 @@ body.dark label.small{color:#a6a49c}
       <div class="card-sm" style="margin-bottom:1rem">
         <p style="font-weight:600;margin-bottom:.5rem">+ Adicionar nova questão</p>
         <input class="name-input" id="nq-topic" placeholder="Tópico (ex: Recrutamento Interno)" style="margin-bottom:.5rem">
+        <label class="small">Tópico de estudo (para o modo prática na aba Estudar)</label>
+        <select class="name-input" id="nq-tid" style="margin-bottom:.5rem"></select>
         <textarea class="name-input" id="nq-text" placeholder="Enunciado da questão" style="margin-bottom:.5rem;min-height:60px"></textarea>
         <input class="name-input" id="nq-opt0" placeholder="Alternativa A" style="margin-bottom:.5rem">
         <input class="name-input" id="nq-opt1" placeholder="Alternativa B" style="margin-bottom:.5rem">
@@ -329,6 +431,57 @@ const ADMIN_PASSWORD = "unisuam2026";
 
 let TOTAL = 10;          // nº de questões por avaliação (vem da config, com este valor por defeito)
 let TIME_LIMIT_MIN = 0;  // 0 = sem limite de tempo
+
+/* ============ TÓPICOS DE ESTUDO (aba Estudar) ============
+   8 tópicos, resumidos a partir do PDF "REVISÃO — Recrutamento e Seleção". */
+const TOPICS = [
+  {id:"rec",icon:"📋",color:"#eeedfe",title:"Conceitos de Recrutamento e Seleção",sub:"Marras (2000) · Chiavenato",
+   summary:"Recrutamento e seleção formam, juntos, o processo de provisão de recursos humanos. O recrutamento é o conjunto de técnicas que visa atrair candidatos potencialmente qualificados e capazes de ocupar cargos na organização. A seleção é a escolha da pessoa certa para o cargo certo, visando manter ou aumentar a eficiência e o desempenho do pessoal.",
+   points:["Recrutamento interno: as vagas são preenchidas pelos próprios colaboradores atuais, por promoção ou transferência — a organização oferece uma carreira de oportunidades ao colaborador.","Recrutamento externo: as vagas são preenchidas pela admissão de candidatos de fora da organização — a organização oferece oportunidades ao mercado.","Nos dois casos, os candidatos preenchidos são os candidatos preferidos daquela modalidade."],
+   highlight:"💡 Dica de prova: Marras (2000) define o processo conjunto de recrutamento e seleção como 'a provisão de recursos humanos'."},
+  {id:"sel",icon:"👥",color:"#eaf3de",title:"Responsabilidade de Linha e Função de Staff",sub:"Quem faz o quê na seleção",
+   summary:"A seleção envolve dois papéis distintos e complementares. A Responsabilidade de Linha (gerentes/chefes/gestores) decide e escolhe os candidatos finais. A Função de Staff (Departamento de RH) assessora, executa o recrutamento, aplica técnicas e prepara os gestores para o processo.",
+   points:["Linha: decide o preenchimento do cargo, define as características básicas, entrevista, avalia e compara candidatos, decide aprovação/rejeição e escolhe os candidatos finais.","Staff (RH): verifica o arquivo de candidatos, faz entrevistas de triagem, desenvolve técnicas de seleção mais adequadas, treina gerentes e assessora o processo seletivo.","Testes psicométricos ou de personalidade só podem ser aplicados por psicólogo."],
+   highlight:"💡 Dica de prova: 'Desenvolver técnicas de seleção mais adequadas' é atribuição do RH (staff) — não do gestor de linha."},
+  {id:"fb",icon:"🗣️",color:"#faeeda",title:"Entrevistas de Seleção e Feedback",sub:"Job Description · Comunicação assertiva",
+   summary:"A entrevista de seleção verifica qualificação, habilidades, potencial e motivação do candidato ao cargo, com base no Job Description (documento com título da vaga, responsabilidades, qualificações, benefícios, horário e modelo de trabalho). Depois da decisão, candidatos não selecionados precisam ser notificados o mais cedo possível, com explicações objetivas e construtivas.",
+   points:["Feedback não é crítica nem elogio: é retroalimentar uma comunicação, expondo o que se pensa sobre uma pessoa ou situação.","Deve ocorrer em local privado e calmo, com o avaliador emocionalmente neutro, direto e objetivo — enfatizando pontos positivos e negativos.","Comunicação assertiva: enviar a mensagem de forma clara, objetiva, aberta e transparente, com delicadeza — sem indiretas e sem delegar a outra pessoa o conteúdo da comunicação."],
+   highlight:"💡 Dica de prova: ser assertivo não é ser mal-educado — é ser claro, direto e respeitoso ao mesmo tempo."},
+  {id:"hh",icon:"🎯",color:"#fcebeb",title:"Headhunter, Recrutador e Jobhunter",sub:"Busca ativa de talentos",
+   summary:"O headhunter ('caçador de cabeças') é especializado em buscar, atrair e selecionar talentos para cargos de média a alta liderança ou especialistas técnicos. Sua diferença em relação ao recrutador tradicional é a busca ativa: em vez de aguardar currículos, mapeia o mercado e aborda profissionais qualificados, mesmo os já empregados.",
+   points:["Etapas do trabalho: Briefing com a empresa → Mapeamento de mercado → Abordagem (Hunting) → Avaliação e negociação.","Recrutador: foca em triagem de currículos para posições gerais. Headhunter: busca ativa para vagas estratégicas e confidenciais. Jobhunter: é o próprio profissional buscando uma oportunidade para si.","Empresas de headhunting representam a empresa contratante; agências de emprego representam tanto a empresa quanto os candidatos. Cobram entre 15% e 35% do salário anual previsto, com garantia de reposição em 1 ano."],
+   highlight:"💡 Dica de prova: 'O bom executivo não está desempregado' — por isso o headhunter prefere abordar quem já está empregado."},
+  {id:"av",icon:"📊",color:"#e1f5ee",title:"Avaliação de Desempenho",sub:"Por que avaliar · Sistemas · Modelos",
+   summary:"Avalia-se o desempenho por duas razões principais: Recompensas (justificar aumentos, promoções, transferências e demissões) e Relacionamento e Percepção (ajudar o funcionário a saber o que os outros pensam a seu respeito, melhorando sua autopercepção). Sem um sistema de medição, o desempenho não está sendo gerenciado, nem é possível identificar problemas ou estabelecer prioridades.",
+   points:["Avaliação por objetivos e resultados: líder e subordinado criam metas juntos no início do período e verificam o cumprimento ao final — é uma averiguação numérica e objetiva.","Avaliação por competências: o colaborador é avaliado não só pelo desempenho no cargo, mas também pela performance como membro da organização, alinhada aos objetivos estratégicos.","Pontos fracos comuns: processo injusto ou tendencioso, uso de recompensa/punição, preenchimento de formulários no lugar de avaliação crítica, comentários negativos que geram reação negativa do avaliado."],
+   highlight:"💡 Dica de prova: sem medição de desempenho, este não está sendo gerenciado — e as pessoas ficam desorientadas sobre o que se espera delas."},
+  {id:"cha",icon:"🧠",color:"#eeedfe",title:"CHA e Competências CHAVE",sub:"Mapa de competências do gestor",
+   summary:"O CHA avalia Conhecimentos (saber — técnicas e informações necessárias ao cargo), Habilidades (saber fazer — capacidade de transformar conhecimento em ação) e Atitudes (saber ser — competências para interpretar e julgar a realidade). O modelo evoluído CHAVE acrescenta Valores (organizacionais e individuais) e Entorno (responsabilidade socioambiental e cidadania).",
+   points:["As Habilidades se dividem em três tipos: Técnica (manuseio de coisas físicas), Humana (relacionamento interpessoal) e Conceitual (ideias e conceitos abstratos).","Habilidade Técnica é mais exigida no nível Operacional (supervisão); Habilidade Humana no nível Intermediário (gerência); Habilidade Conceitual no nível Institucional (alta direção).","Habilidade conceitual = capacidade de coordenar e integrar todos os interesses e atividades de uma organização."],
+   highlight:"💡 Dica de prova: quanto mais alto o nível hierárquico, mais peso têm as habilidades conceituais; quanto mais operacional, mais peso têm as técnicas."},
+  {id:"tic",icon:"💻",color:"#faeeda",title:"TICs, IA e o RH Estratégico",sub:"Do RH tradicional ao estratégico",
+   summary:"As Tecnologias de Informação e Comunicação (TICs) transformaram o RH de um modelo tradicional — administrativo, burocrático, focado em folha de pagamento e controle de presença — para um RH Estratégico, que atua como parceiro do negócio focado em desenvolvimento do capital humano, gestão de talentos e cultura organizacional.",
+   points:["Analytics permite análise detalhada de desempenho, engajamento e rotatividade, ajudando o RH a antecipar necessidades e criar políticas mais eficazes.","A IA auxilia o RH em várias etapas: triagem automática de currículos, otimização da divulgação de vagas, chatbots de atendimento inicial, avaliação comportamental e técnica, e organização do fluxo do processo seletivo.","Algoritmos de IA bem configurados podem reduzir viés inconsciente na seleção, tornando as decisões mais justas e focadas nas qualidades reais do candidato — mas não substituem a decisão humana."],
+   highlight:"💡 Dica de prova: a IA automatiza a triagem inicial e reduz viés — mas o RH Estratégico continua sendo o parceiro do negócio, não é substituído por ela."},
+  {id:"cli",icon:"🌡️",color:"#e1f5ee",title:"Clima Organizacional e Endomarketing",sub:"Diagnóstico · Plano de ação · Engajamento",
+   summary:"O diagnóstico de clima organizacional identifica como os colaboradores percebem o ambiente de trabalho, as práticas da empresa e suas condições para desempenhar funções. Sua credibilidade depende de anonimato, explicação clara da finalidade e compromisso real com melhorias. O Endomarketing, em parceria com o RH, busca engajar, motivar e alinhar os colaboradores aos valores e à cultura da organização.",
+   points:["O diagnóstico só gera valor quando resulta em um plano de ação com prioridades, responsáveis, metas mensuráveis e prazos definidos.","O clima organizacional é dinâmico — exige monitoramento contínuo, com pesquisas periódicas e acompanhamento de indicadores como rotatividade e absenteísmo.","A principal dificuldade do Endomarketing é o desalinhamento entre o discurso e a prática da empresa, o que gera descrença e resistência dos colaboradores."],
+   highlight:"💡 Dica de prova: um diagnóstico de clima sem plano de ação concreto (responsáveis, metas, prazos) não gera valor real para a organização."}
+];
+
+/* mapeamento de tópicos "legados" (campo t, texto livre) para o id de tópico de estudo
+   — usado como fallback para questões que ainda não têm o campo tid definido */
+const LEGACY_TID_MAP = {
+  "Conceito de Recrutamento":"rec","Conceito de Seleção":"rec","Recrutamento Interno":"rec","Recrutamento Externo":"rec",
+  "Responsabilidade de Linha":"sel","Função de Staff":"sel",
+  "Entrevistas de Seleção":"fb","Feedback":"fb",
+  "Headhunter":"hh",
+  "Avaliação de Desempenho":"av","Avaliação por Objetivos":"av","Avaliação por Competências":"av",
+  "CHA":"cha","Três Habilidades":"cha",
+  "TICs e RH":"tic","IA no Processo Seletivo":"tic",
+  "Clima Organizacional":"cli","Endomarketing":"cli"
+};
+function getQuestionTid(q){ return q.tid || LEGACY_TID_MAP[q.t] || null; }
 
 const ALL_Q=[
 {t:"Conceito de Recrutamento",q:"Segundo Marras (2000), agregar pessoas é atividade fundamental da estratégia de toda organização que procura aplicar o recrutamento e a seleção como parte de um mesmo processo. Como esse processo é denominado?",opts:["Provisão de recursos humanos","Avaliação de desempenho","Diagnóstico de clima organizacional","Gestão por competências"],ans:0,e:"Marras (2000) define esse processo conjunto como 'a provisão de recursos humanos'."},
@@ -369,16 +522,23 @@ const ALL_Q=[
 {t:"Avaliação de Desempenho",q:"A avaliação de desempenho, sob a perspectiva de 'Relacionamento e Percepção', proporciona:",opts:["Apenas métricas numéricas de produtividade","Meios para que cada funcionário saiba o que pessoas ao seu redor pensam, melhorando sua autopercepção","Exclusivamente dados para promoção salarial","Um sistema de punição para baixo desempenho"],ans:1,e:"A avaliação melhora a autopercepção do colaborador e seu relacionamento interpessoal no trabalho."},
 ];
 
-let QUESTION_BANK = {};   // banco de questões vindo do Firebase: {chave: {t,q,opts,ans,e}}
+let QUESTION_BANK = {};   // banco de questões vindo do Firebase: {chave: {t,q,opts,ans,e,tid}}
 let session=[],cur=0,sc=0,chosen=null,playerName='';
 let timerInterval=null,elapsedSecs=0,limitSecs=0;
 let adminLoggedIn=false;
+
+/* estado do modo estudo (prática por tópico) */
+let sqSession=[],sqCur=0,sqSc=0,sqChosen=null,sqTopicId='',sqTopicTitle='';
 
 function shuffle(a){let b=[...a];for(let i=b.length-1;i>0;i--){let j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]]}return b}
 function fmtTime(s){const m=Math.floor(s/60);const ss=s%60;return m+'m '+String(ss).padStart(2,'0')+'s';}
 function fmtTimeShort(s){const m=Math.floor(s/60);const ss=s%60;return m+':'+String(ss).padStart(2,'0');}
 function escHtml(s){return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 function escAttr(s){return (s||'').replace(/"/g,'&quot;');}
+
+/* ============ LOCALSTORAGE — progresso de estudo (por navegador) ============ */
+function getStudied(){try{return JSON.parse(localStorage.getItem('quiz_rh_studied')||'{}');}catch(e){return{};}}
+function setStudied(obj){try{localStorage.setItem('quiz_rh_studied',JSON.stringify(obj));}catch(e){}}
 
 /* ============ TEMA (MODO ESCURO) ============ */
 function applyTheme(){
@@ -422,10 +582,15 @@ async function loadQuestionsFromFirebase(){
   QUESTION_BANK=seed;
 }
 
+function populateTidSelect(sel, selected){
+  sel.innerHTML=TOPICS.map(t=>`<option value="${t.id}" ${t.id===selected?'selected':''}>${escHtml(t.title)}</option>`).join('');
+}
+
 async function init(){
   applyTheme();
   await Promise.all([loadConfigFromFirebase(), loadQuestionsFromFirebase()]);
   refreshHomeTags();
+  populateTidSelect(document.getElementById('nq-tid'), TOPICS[0].id);
   goHome();
 }
 
@@ -433,14 +598,14 @@ function refreshHomeTags(){
   const n=Object.keys(QUESTION_BANK).length;
   document.getElementById('htag-bank').textContent=n+' questões no banco';
   document.getElementById('htag-count').textContent=TOTAL+' por avaliação';
-  document.getElementById('home-how').innerHTML='Cada avaliação sorteia <strong>'+TOTAL+'</strong> questões aleatórias'+(TIME_LIMIT_MIN>0?' e tem um limite de <strong>'+TIME_LIMIT_MIN+' min</strong>':'')+'. O resultado entra no <strong style="color:#534AB7">ranking global</strong> — ordenado por acertos e, em empate, por tempo.';
+  document.getElementById('home-how').innerHTML='Estuda os 8 tópicos na aba <strong style="color:#534AB7">Estudar</strong> e pratica questões por tema (sem afetar o ranking). Quando estiveres pronto, faz a <strong style="color:#534AB7">avaliação completa</strong> — sorteia <strong>'+TOTAL+'</strong> questões aleatórias'+(TIME_LIMIT_MIN>0?' com limite de <strong>'+TIME_LIMIT_MIN+' min</strong>':'')+' — e entra no <strong style="color:#534AB7">ranking global</strong>.';
 }
 
 /* ============ NAVEGAÇÃO ============ */
 
 function setNav(id){
   document.querySelectorAll('.nav-link').forEach(n=>n.classList.remove('active'));
-  const map={home:'nav-home',ranking:'nav-rank',admin:'nav-admin'};
+  const map={home:'nav-home',study:'nav-study',ranking:'nav-rank',admin:'nav-admin'};
   if(map[id])document.getElementById(map[id]).classList.add('active');
 }
 function showScreen(id){
@@ -449,6 +614,7 @@ function showScreen(id){
   setNav(id);window.scrollTo(0,0);
 }
 function goHome(){showScreen('home');loadRanking('home-rank',5);}
+function goStudy(){showScreen('study');setNav('study');renderStudy();}
 function goRanking(){showScreen('ranking');loadRanking('full-rank',50);}
 function goName(){
   showScreen('name-screen');setNav('');
@@ -461,7 +627,126 @@ function confirmName(){
   playerName=n;startQuiz();
 }
 
-/* ============ QUIZ ============ */
+/* ============ ABA ESTUDAR ============ */
+
+function renderStudy(){
+  const studied=getStudied();
+  const done=TOPICS.filter(t=>studied[t.id]).length;
+  const pct=Math.round(done/TOPICS.length*100);
+  document.getElementById('study-prog-fill').style.width=pct+'%';
+  document.getElementById('study-prog-label').textContent=done+' de '+TOPICS.length+' tópicos revistos';
+
+  document.getElementById('topic-list').innerHTML = TOPICS.map(t=>{
+    const isDone = !!studied[t.id];
+    const count = Object.values(QUESTION_BANK).filter(q=>getQuestionTid(q)===t.id).length;
+    return `<div class="topic-card">
+      <div class="topic-header" onclick="toggleTopic('body-${t.id}','chev-${t.id}')">
+        <div class="topic-left">
+          <div class="topic-icon" style="background:${t.color}">${t.icon}</div>
+          <div style="min-width:0">
+            <div class="topic-title">${escHtml(t.title)}</div>
+            <div class="topic-sub">${escHtml(t.sub)} · ${count} questão${count!==1?'es':''}</div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px">
+          <div class="check-circle ${isDone?'done':''}">${isDone?'✓':''}</div>
+          <span class="chevron-icon" id="chev-${t.id}">▼</span>
+        </div>
+      </div>
+      <div class="topic-body" id="body-${t.id}">
+        <p class="topic-summary">${escHtml(t.summary)}</p>
+        <div>${t.points.map(p=>`<div class="key-point"><div class="kp-dot"></div><span>${escHtml(p)}</span></div>`).join('')}</div>
+        <div class="highlight-box">${escHtml(t.highlight)}</div>
+        <div class="topic-actions">
+          <button class="btn btn-mark ${isDone?'marked':''}" onclick="toggleStudied('${t.id}')">${isDone?'✓ Revisto':'Marcar como revisto'}</button>
+          <button class="btn btn-primary btn-practice-sm" onclick="startStudyQuiz('${t.id}','${escAttr(t.title)}')">Praticar questões →</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function toggleTopic(bodyId, chevId){
+  const body=document.getElementById(bodyId);
+  const chev=document.getElementById(chevId);
+  const open=body.classList.contains('open');
+  body.classList.toggle('open',!open);
+  chev.classList.toggle('open',!open);
+}
+
+function toggleStudied(tid){
+  const studied=getStudied();
+  studied[tid]=!studied[tid];
+  setStudied(studied);
+  renderStudy();
+}
+
+/* ============ MODO ESTUDO — PRÁTICA POR TÓPICO (não conta para o ranking) ============ */
+
+function startStudyQuiz(tid, title){
+  const qs = Object.values(QUESTION_BANK).filter(q=>getQuestionTid(q)===tid);
+  if(!qs.length){alert('Ainda não há questões cadastradas para este tópico.');return;}
+  sqSession=shuffle(qs);
+  sqCur=0;sqSc=0;sqChosen=null;sqTopicId=tid;sqTopicTitle=title;
+  document.getElementById('sq-retry-btn').onclick=()=>startStudyQuiz(tid,title);
+  showScreen('study-quiz');setNav('study');
+  sqRenderQ();
+}
+
+function sqRenderQ(){
+  const q=sqSession[sqCur];
+  const total=sqSession.length;
+  document.getElementById('sq-label').textContent='Questão '+(sqCur+1)+' / '+total;
+  document.getElementById('sq-topic').textContent=sqTopicTitle;
+  document.getElementById('sq-prog').style.width=Math.round((sqCur/total)*100)+'%';
+  document.getElementById('sq-text').textContent=q.q;
+  document.getElementById('sq-expl').style.display='none';
+  document.getElementById('sq-next').style.display='none';
+  document.getElementById('sq-live').textContent=sqSc+' acerto'+(sqSc!==1?'s':'')+' até agora';
+  const letters=['A','B','C','D'];
+  const shuf=shuffle(q.opts.map((o,i)=>({o,i})));
+  document.getElementById('sq-opts').innerHTML=shuf.map((item,idx)=>`
+    <div class="opt" onclick="sqPick(this,${item.i},${q.ans})" data-idx="${item.i}">
+      <span class="letter">${letters[idx]}</span><span>${escHtml(item.o)}</span>
+    </div>`).join('');
+  sqChosen=null;
+}
+
+function sqPick(el,idx,ans){
+  if(sqChosen!==null)return;
+  sqChosen=idx;
+  document.querySelectorAll('#sq-opts .opt').forEach(o=>o.classList.add('disabled'));
+  const q=sqSession[sqCur];
+  if(idx===ans){el.classList.add('correct');sqSc++;}
+  else{el.classList.add('wrong');document.querySelectorAll('#sq-opts .opt').forEach(o=>{if(parseInt(o.dataset.idx)===ans)o.classList.add('correct');});}
+  const expl=document.getElementById('sq-expl');
+  expl.textContent='💡 '+q.e;
+  expl.style.display='block';
+  document.getElementById('sq-next').style.display='inline-flex';
+  document.getElementById('sq-live').textContent=sqSc+' acerto'+(sqSc!==1?'s':'')+' até agora';
+}
+
+function sqNext(){
+  sqCur++;
+  if(sqCur>=sqSession.length){sqFinish();return;}
+  sqRenderQ();
+}
+
+function sqFinish(){
+  const total=sqSession.length;
+  const pct=Math.round((sqSc/total)*100);
+  document.getElementById('sq-score-num').textContent=sqSc+'/'+total;
+  const msg=pct>=90?'🏆 Excelente! Dominas este tópico!':pct>=70?'👍 Bom trabalho! Continua a rever os erros.':pct>=50?'📖 Estuda mais este tópico antes da avaliação.':'💪 Relê o resumo e tenta novamente!';
+  document.getElementById('sq-score-msg').textContent=msg;
+  document.getElementById('sq-b-acc').textContent='✓ '+sqSc+' acerto'+(sqSc!==1?'s':'');
+  document.getElementById('sq-b-err').textContent='✗ '+(total-sqSc)+' erro'+((total-sqSc)!==1?'s':'');
+  document.getElementById('sq-b-pct').textContent=pct+'% de aproveitamento';
+  // marca automaticamente como revisto ao atingir 70% ou mais
+  if(pct>=70){const s=getStudied();s[sqTopicId]=true;setStudied(s);}
+  showScreen('study-result');setNav('study');
+}
+
+/* ============ QUIZ (avaliação completa — entra no ranking) ============ */
 
 function startQuiz(){
   const pool=Object.values(QUESTION_BANK);
@@ -648,10 +933,12 @@ function renderAdminQuestions(){
   if(!keys.length){el.innerHTML='<div class="empty">Sem questões no banco.</div>';return;}
   el.innerHTML=keys.map(k=>{
     const q=QUESTION_BANK[k];
+    const tidLabel=TOPICS.find(t=>t.id===getQuestionTid(q));
     return `<div class="card-sm" style="margin-bottom:.6rem">
       <div class="qcard-row">
         <div style="flex:1;min-width:0">
           <span class="badge bn">${escHtml(q.t)}</span>
+          ${tidLabel?`<span class="badge bp">📖 ${escHtml(tidLabel.title)}</span>`:''}
           <p style="margin-top:.4rem;font-size:13px">${escHtml(q.q)}</p>
         </div>
         <div class="qcard-actions">
@@ -671,6 +958,8 @@ function toggleEditQuestion(k){
   box.innerHTML=`
     <label class="small">Tópico</label>
     <input class="name-input" id="eq-topic-${k}" value="${escAttr(q.t)}" style="margin-bottom:.5rem">
+    <label class="small">Tópico de estudo (para o modo prática na aba Estudar)</label>
+    <select class="name-input" id="eq-tid-${k}" style="margin-bottom:.5rem"></select>
     <label class="small">Enunciado</label>
     <textarea class="name-input" id="eq-text-${k}" style="margin-bottom:.5rem;min-height:60px">${escHtml(q.q)}</textarea>
     <label class="small">Alternativas</label>
@@ -682,12 +971,14 @@ function toggleEditQuestion(k){
     <label class="small">Explicação</label>
     <textarea class="name-input" id="eq-expl-${k}" style="margin-bottom:.5rem;min-height:50px">${escHtml(q.e)}</textarea>
     <button class="btn btn-primary btn-xs" onclick="saveQuestion('${k}')">Guardar alterações</button>`;
+  populateTidSelect(document.getElementById('eq-tid-'+k), getQuestionTid(q) || TOPICS[0].id);
   box.style.display='block';
 }
 
 async function saveQuestion(k){
   const updated={
     t: document.getElementById('eq-topic-'+k).value.trim(),
+    tid: document.getElementById('eq-tid-'+k).value,
     q: document.getElementById('eq-text-'+k).value.trim(),
     opts:[0,1,2,3].map(i=>document.getElementById('eq-opt'+i+'-'+k).value.trim()),
     ans: parseInt(document.getElementById('eq-ans-'+k).value),
@@ -712,6 +1003,7 @@ async function deleteQuestion(k){
 
 async function addQuestion(){
   const t=document.getElementById('nq-topic').value.trim();
+  const tid=document.getElementById('nq-tid').value;
   const qt=document.getElementById('nq-text').value.trim();
   const opts=[0,1,2,3].map(i=>document.getElementById('nq-opt'+i).value.trim());
   const ans=parseInt(document.getElementById('nq-ans').value);
@@ -722,7 +1014,7 @@ async function addQuestion(){
     statusEl.textContent='⚠️ Preenche todos os campos antes de adicionar.';
     return;
   }
-  const newQ={t,q:qt,opts,ans,e};
+  const newQ={t,tid,q:qt,opts,ans,e};
   try{
     const res=await fetch(FIREBASE_URL+'/questions.json',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(newQ)});
     const data=await res.json();
